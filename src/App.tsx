@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import { xumm } from "./store/XummStore";
 import { Client, AccountInfoRequest } from 'xrpl';
 
@@ -7,6 +6,7 @@ export default function App() {
     const [account, setAccount] = useState<string | undefined>(undefined);
     const [balance, setBalance] = useState<string | undefined>(undefined);
     const [destinationAddress, setDestinationAddress] = useState('');
+    const [transactionAmount, setTransactionAmount] = useState('');
 
     useEffect(() => {
         xumm.user.account.then((account: string | undefined) => setAccount(account));
@@ -41,7 +41,7 @@ export default function App() {
         const payload = await xumm.payload?.create({
             TransactionType: "Payment",
             Destination: destinationAddress,
-            Amount: "1000", // 1000 drops (=0.001000XRP)
+            Amount: String(Number(transactionAmount)*1000000), // 1000 drops (=0.001000XRP)
         });
         if (!payload?.pushed) {
             // XummへPush通知が届かない場合の処理
@@ -53,10 +53,12 @@ export default function App() {
             <div
                 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-lg text-stone-50">
                 {!account && (
-                    <div
-                        className={"mt-3 btn btn-wide"}
-                        onClick={connect}>
-                        ウォレットを接続してはじめる
+                    <div className={"h-1/2"}>
+                        <div
+                            className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            onClick={connect}>
+                            ウォレットを接続してはじめる
+                        </div>
                     </div>
                 )}
                 {account && (
@@ -102,11 +104,17 @@ export default function App() {
                                 </label>
                                 <input
                                     type="text"
-                                    name="price"
-                                    id="price"
+                                    name="amount"
+                                    id="amount"
                                     className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                    placeholder=""
+                                    placeholder="1000"
+                                    onChange={(e) => setTransactionAmount(e.target.value)}
                                 />
+                                <div className="pointer-events-none absolute inset-y-0 right-1/2 flex items-center pr-3">
+                                  <span className="text-gray-500 sm:text-sm" id="price-currency">
+                                    XRP
+                                  </span>
+                                </div>
                             </div>
                             <button
                                 type="button"
