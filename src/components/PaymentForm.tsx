@@ -11,6 +11,10 @@ export default function PaymentForm({ account }: { account: string | undefined }
             Destination: destinationAddress,
             Amount: String(Number(transactionAmount)*1000000), // 1000 drops (=0.001000XRP)
         });
+        if (payload?.pushed) {
+            alert('Xummアプリから送金を確定してください');
+        }
+
         if (!payload?.pushed) {
             // XummへPush通知が届かない場合の処理
         }
