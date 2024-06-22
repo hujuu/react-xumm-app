@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { xumm } from "./store/XummStore";
 import { Client, AccountInfoRequest } from 'xrpl';
+import PaymentForm from "./components/PaymentForm.tsx";
 
 export default function App() {
     const [account, setAccount] = useState<string | undefined>(undefined);
@@ -69,6 +70,7 @@ export default function App() {
                         <div className={"mt-3 mb-8 text-gray-800"}>
                             {balance !== undefined ? `XRP Balance: ${Number(balance) / 1000000}` : 'Fetching balance...'}
                         </div>
+                        <PaymentForm account={account}/>
                         <div>
                             <div className="relative mb-4">
                                 <div className="absolute inset-0 flex items-center" aria-hidden="true">
